@@ -13,6 +13,7 @@ Collection of system configs for my machines.
     ssh -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no admin@localhost -p 2221
     # Once done, hit CTRL+a,x to shut down VM
     ```
+- [x] Build `test` VM locally
 - [ ] Build `test` VM in GHA
 
 [nix_vm_gist]: https://gist.github.com/FlakM/0535b8aa7efec56906c5ab5e32580adf

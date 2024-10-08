@@ -25,11 +25,13 @@
     formatter.${system} = pkgs.alejandra;
 
     # test is a hostname for our machine
-    nixosConfigurations.test = nixpkgs.lib.nixosSystem {
-      inherit system;
-      modules = [
-        ./configuration.nix
-      ];
-    };
+    #    nixosConfigurations.hello = nixpkgs.lib.nixosSystem {
+    #      inherit system;
+    #      modules = [
+    #        ./configuration.nix
+    #      ];
+    #    };
+
+    checks.${system}.hello = pkgs.testers.runNixOSTest ./tests/hello.nix;
   };
 }
