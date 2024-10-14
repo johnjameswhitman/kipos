@@ -32,6 +32,9 @@
     #      ];
     #    };
 
-    checks.${system}.hello = pkgs.testers.runNixOSTest ./tests/hello.nix;
+    checks.${system} = {
+      hello = pkgs.testers.runNixOSTest ./tests/hello.nix;
+      k3s-multi-node = pkgs.testers.runNixOSTest ./tests/k3s-multi-node.nix;
+    };
   };
 }
