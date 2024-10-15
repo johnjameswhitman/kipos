@@ -14,6 +14,9 @@ Collection of system configs for my machines.
     # Once done, hit CTRL+a,x to shut down VM
     ```
 - [x] Build `test` VM locally
-- [ ] Build `test` VM in GHA
+- [x] Build `test` VM in GHA
+- [x] Set up renovate on repo
+- [ ] Clean up `hello.nix`
+- [ ] See if disko works with tests
 
 [nix_vm_gist]: https://gist.github.com/FlakM/0535b8aa7efec56906c5ab5e32580adf
