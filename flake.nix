@@ -23,14 +23,15 @@
     };
   in {
     formatter.${system} = pkgs.alejandra;
+    devShell."${system}" = import ./shell.nix {inherit pkgs;};
 
     # test is a hostname for our machine
-    #    nixosConfigurations.hello = nixpkgs.lib.nixosSystem {
-    #      inherit system;
-    #      modules = [
-    #        ./configuration.nix
-    #      ];
-    #    };
+    # nixosConfigurations.hello = nixpkgs.lib.nixosSystem {
+    #   inherit system;
+    #   modules = [
+    #     ./configuration.nix
+    #   ];
+    # };
 
     checks.${system} = {
       hello = pkgs.testers.runNixOSTest ./tests/hello.nix;
