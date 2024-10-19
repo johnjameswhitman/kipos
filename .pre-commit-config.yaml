@@ -13,7 +13,7 @@ repos:
     -   id: trailing-whitespace
 -   repo: local
     hooks:
-    -   id: nix-fmt 
+    -   id: nix-fmt
         name: nix fmt
         language: system
         entry: nix fmt
