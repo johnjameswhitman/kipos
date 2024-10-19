@@ -20,5 +20,7 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: DeterminateSystems/flake-checker-action@main
+      - uses: actions/setup-python@v3
+      - uses: pre-commit/action@v3.0.1
       - name: Run `nix flake check`
         run: nix flake check --show-trace
