@@ -11,8 +11,10 @@ repos:
     -   id: pretty-format-json
         args: [--autofix]
     -   id: trailing-whitespace
--   repo: https://github.com/kamadorueda/alejandra
-    # rev: 3.0.0
-    rev: c85ff49c7cef2c4b173e2b5f8a9e626e4f85ebda
+-   repo: local
     hooks:
-    -   id: alejandra
+    -   id: nix-fmt 
+        name: nix fmt
+        language: system
+        entry: nix fmt
+        files: .*\.nix$
