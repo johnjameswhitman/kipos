@@ -68,7 +68,6 @@ in {
         inherit tokenFile;
         enable = true;
         role = "server";
-#        package = k3s;
         clusterInit = true;
         extraFlags = lib.strings.concatStringsSep " " [
           "--disable coredns"
