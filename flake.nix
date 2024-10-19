@@ -3,6 +3,8 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    alejandra.url = "github:kamadorueda/alejandra/d7552fef2ccf1bbf0d36b27f6fddb19073f205b7";
+    alejandra.inputs.nixpkgs.follows = "nixpkgs";
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
     disko.url = "github:nix-community/disko";
@@ -10,6 +12,7 @@
   };
 
   outputs = inputs @ {
+    alejandra,
     disko,
     nixpkgs,
     self,
@@ -22,7 +25,7 @@
       config.allowUnfree = true;
     };
   in {
-    formatter.${system} = pkgs.alejandra;
+    formatter.${system} = alejandra.defaultPackage.${system};
     devShell."${system}" = import ./shell.nix {inherit pkgs;};
 
     # test is a hostname for our machine
