@@ -1,8 +1,7 @@
-{ pkgs ? import <nixpkgs> {}}:
-
-with pkgs; mkShell {
-  nativeBuildInputs = [
-    pre-commit
-  ];
-}
-
+{pkgs ? import <nixpkgs> {}}:
+with pkgs;
+  mkShell {
+    nativeBuildInputs = [
+      pre-commit
+    ];
+  }
