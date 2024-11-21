@@ -27,7 +27,7 @@
     makeTest = import (pkgs.path + "/nixos/tests/make-test-python.nix");
     eval-config = import (pkgs.path + "/nixos/lib/eval-config.nix");
     lib = pkgs.lib;
-    diskoLib = import disko.lib { inherit lib makeTest eval-config; };
+    diskoLib = import disko.lib {inherit lib makeTest eval-config;};
   in {
     formatter.${system} = alejandra.defaultPackage.${system};
     devShell."${system}" = import ./shell.nix {inherit pkgs;};

@@ -4,7 +4,7 @@
   extraInstallerConfig.networking.hostId = "8425e349";
   extraSystemConfig = {
     networking.hostId = "8425e349";
-    fileSystems."/zfs_legacy_fs".options = [ "nofail" ]; # TODO find out why we need this!
+    fileSystems."/zfs_legacy_fs".options = ["nofail"]; # TODO find out why we need this!
   };
   extraTestScript = ''
     machine.succeed("test -b /dev/zvol/zroot/zfs_testvolume");
@@ -32,4 +32,3 @@
     machine.succeed("zfs get keystatus zroot/encrypted/test");
   '';
 }
-
