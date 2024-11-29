@@ -23,4 +23,4 @@ jobs:
       - uses: actions/setup-python@v3
       - uses: pre-commit/action@v3.0.1
       - name: Run `nix flake check`
-        run: nix flake check --impure --show-trace
+        run: nix flake check --show-trace
