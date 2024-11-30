@@ -44,7 +44,7 @@
       hello = pkgs.testers.runNixOSTest ./tests/hello.nix;
       # silver = disko.lib.testLib.makeDiskoTest (import ./tests/silver.nix);
       # silverAlt = diskoLib.testLib.makeDiskoTest (import ./tests/silver.nix);
-      silverAlt = diskoLib.testLib.makeDiskoTest ((import ./tests/silver.nix) // { inherit pkgs; });
+      silverAlt = diskoLib.testLib.makeDiskoTest ((import ./tests/silver.nix) // {inherit pkgs;});
       k3s-multi-node = pkgs.testers.runNixOSTest ./tests/k3s-multi-node.nix;
     };
   };
