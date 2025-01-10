@@ -3,42 +3,94 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    alejandra.url = "github:kamadorueda/alejandra/d7552fef2ccf1bbf0d36b27f6fddb19073f205b7";
-    alejandra.inputs.nixpkgs.follows = "nixpkgs";
-    sops-nix.url = "github:Mic92/sops-nix";
-    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+    flake-parts.url = "github:hercules-ci/flake-parts";
+
+    # sops-nix.url = "github:Mic92/sops-nix";
+    # sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
+
+    nix-darwin.url = "github:LnL7/nix-darwin";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+
+    treefmt-nix.url = "github:numtide/treefmt-nix";
   };
 
-  outputs = inputs @ {
-    alejandra,
-    disko,
-    nixpkgs,
-    self,
-    sops-nix,
-    ...
-  }: let
-    system = "x86_64-linux"; # Later can add support for darwin as-needed.
-    pkgs = import nixpkgs {
-      system = "${system}";
-      config.allowUnfree = true;
-    };
-  in {
-    formatter.${system} = alejandra.defaultPackage.${system};
-    devShell."${system}" = import ./shell.nix {inherit pkgs;};
+  outputs =
+    inputs@{
+      disko,
+      flake-parts,
+      nixpkgs,
+      self,
+      # sops-nix,
+      nix-darwin,
+      ...
+    }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
 
-    # test is a hostname for our machine
-    # nixosConfigurations.hello = nixpkgs.lib.nixosSystem {
-    #   inherit system;
-    #   modules = [
-    #     ./configuration.nix
-    #   ];
-    # };
+      imports = [ inputs.treefmt-nix.flakeModule ];
 
-    checks.${system} = {
-      hello = pkgs.testers.runNixOSTest ./tests/hello.nix;
-      k3s-multi-node = pkgs.testers.runNixOSTest ./tests/k3s-multi-node.nix;
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "aarch64-darwin"
+      ];
+
+      perSystem =
+        {
+          config,
+          self',
+          inputs',
+          pkgs,
+          system,
+          ...
+        }:
+        {
+
+          devShells = {
+            default = pkgs.mkShell {
+              nativeBuildInputs = with pkgs; [
+                act
+                nixd
+                pre-commit
+              ];
+            };
+          };
+
+          treefmt.config = {
+            projectRootFile = "flake.nix";
+            programs.nixfmt.enable = true;
+          };
+          formatter = config.treefmt.build.wrapper;
+
+        };
+
+      flake =
+        let
+          x86_64_linux_pkgs = import nixpkgs {
+            system = "x86_64-linux";
+            config.allowUnfree = true;
+          };
+        in
+        {
+
+          checks."x86_64-linux" = {
+            hello = x86_64_linux_pkgs.testers.runNixOSTest ./tests/hello.nix;
+            k3s-multi-node = x86_64_linux_pkgs.testers.runNixOSTest ./tests/k3s-multi-node.nix;
+          };
+
+          darwinConfigurations.mbp24 = inputs.nix-darwin.lib.darwinSystem {
+            modules = [ ./machines/darwin.nix ];
+          };
+
+          # nixosConfigurations.hello = inputs.nixpkgs.lib.nixosSystem {
+          #   system = "x86_64-linux";
+          #   modules = [ ./machines/hello.nix ];
+          # };
+
+        };
     };
-  };
+
 }
