@@ -1,10 +1,13 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   name = "hello";
   nodes = {
-    machine1 = {pkgs, ...}: {
-      imports = [../machines/hello.nix];
-      environment.systemPackages = [pkgs.hello];
-    };
+    machine1 =
+      { pkgs, ... }:
+      {
+        imports = [ ../machines/hello.nix ];
+        environment.systemPackages = [ pkgs.hello ];
+      };
   };
   testScript = ''
     start_all()
