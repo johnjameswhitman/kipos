@@ -7,6 +7,10 @@
     vim
   ];
 
+  # Homebrew packages (need to manually install homebrew first)
+  homebrew.enable = true;
+  homebrew.casks = [ "middleclick" ];
+
   services.nix-daemon.enable = true;
 
   security.pam.enableSudoTouchIdAuth = true;
