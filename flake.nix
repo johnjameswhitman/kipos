@@ -83,6 +83,9 @@
 
           darwinConfigurations.mbp24 = inputs.nix-darwin.lib.darwinSystem {
             modules = [ ./machines/darwin.nix ];
+            specialArgs = {
+              inherit inputs;
+            };
           };
 
           # nixosConfigurations.hello = inputs.nixpkgs.lib.nixosSystem {

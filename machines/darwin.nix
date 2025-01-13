@@ -30,4 +30,7 @@
   # Allow unfree packages.
   nixpkgs.config.allowUnfree = true;
 
+  # Try to use same version of nix as nixpkgs.
+  nix.package = pkgs.nixVersions.latest;
+
 }
