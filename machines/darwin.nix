@@ -9,7 +9,10 @@
 
   # Homebrew packages (need to manually install homebrew first)
   homebrew.enable = true;
-  homebrew.casks = [ "middleclick" ];
+  homebrew.casks = [
+    "middleclick"
+    "steam"
+  ];
 
   services.nix-daemon.enable = true;
 
