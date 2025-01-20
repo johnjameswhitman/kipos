@@ -10,6 +10,7 @@
   # Homebrew packages (need to manually install homebrew first)
   homebrew.enable = true;
   homebrew.casks = [
+    "gnucash"
     "middleclick"
     "steam"
   ];
