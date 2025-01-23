@@ -88,6 +88,13 @@
             };
           };
 
+          darwinConfigurations.mini24 = inputs.nix-darwin.lib.darwinSystem {
+            modules = [ ./machines/darwin.nix ];
+            specialArgs = {
+              inherit inputs;
+            };
+          };
+
           # nixosConfigurations.hello = inputs.nixpkgs.lib.nixosSystem {
           #   system = "x86_64-linux";
           #   modules = [ ./machines/hello.nix ];
