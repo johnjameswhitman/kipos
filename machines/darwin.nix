@@ -15,6 +15,7 @@
     "middleclick"
     "obsidian"
     "sensiblesidebuttons"
+    "sanesidebuttons"
     "steam"
   ];
 
