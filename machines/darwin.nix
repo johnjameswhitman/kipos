@@ -11,7 +11,10 @@
   homebrew.enable = true;
   homebrew.casks = [
     "gnucash"
+    "joplin"
     "middleclick"
+    "obsidian"
+    "sensiblesidebuttons"
     "steam"
   ];
 
