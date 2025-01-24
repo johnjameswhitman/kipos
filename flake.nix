@@ -84,23 +84,26 @@
 
           secrets_path = builtins.toString inputs.secrets;
           checks."x86_64-linux" = {
-            hello = x86_64_linux_pkgs.testers.runNixOSTest {
-              imports = [
-                # inputs.sops-nix.nixosModules.sops
-                ./tests/hello.nix
-              ];
-              # There has to be a better way to get this into the test machine.
-              defaults.environment.etc = {
-                "hello".text = inputs.secrets.dummy.hello;
-                "sops/age/keys.txt".text = inputs.secrets.dummy.age_key;
-                "sops/secrets.yaml".text = inputs.secrets.dummy.sops_yaml;
-              };
-              # defaults.sops = {
-              #   age.keyFile = "/etc/sops/age/keys.txt";
-              #   defaultSopsFile = "/etc/sops/secrets.yaml";
-              #   secrets.hello = { };
-              # };
-            };
+            # hello = x86_64_linux_pkgs.testers.runNixOSTest {
+            # imports = [
+            #   # inputs.sops-nix.nixosModules.sops
+            #   ./tests/hello.nix
+            # ];
+            # There has to be a better way to get this into the test machine.
+            # defaults.environment.etc = {
+            #   "hello".text = inputs.secrets.dummy.hello;
+            #   "sops/age/keys.txt".text = inputs.secrets.dummy.age_key;
+            #   "sops/secrets.yaml".text = inputs.secrets.dummy.sops_yaml;
+            # };
+            # defaults.sops = {
+            #   age.keyFile = "/etc/sops/age/keys.txt";
+            #   defaultSopsFile = "/etc/sops/secrets.yaml";
+            #   secrets.hello = { };
+            # };
+            # };
+            # https://discourse.nixos.org/t/infinite-recursion-when-modularizing-flake-runnixostest/58579/6
+            # Run with: nix run -L .\#checks.x86_64-linux.test.driverInteractive
+            hello = x86_64_linux_pkgs.testers.runNixOSTest (import ./tests/hello.nix { inherit inputs; });
             k3s-multi-node = x86_64_linux_pkgs.testers.runNixOSTest ./tests/k3s-multi-node.nix;
           };
 
