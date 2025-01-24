@@ -10,7 +10,7 @@
         sops = {
           age.keyFile = "/etc/sops/age/keys.txt";
           defaultSopsFile = /etc/sops/secrets.yaml;
-          secrets.hello.mode = "0444";
+          secrets.hello.neededForUsers = false;
         };
       };
   };
