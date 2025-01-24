@@ -83,7 +83,10 @@
         {
 
           checks."x86_64-linux" = {
-            hello = x86_64_linux_pkgs.testers.runNixOSTest ./tests/hello.nix;
+            hello = x86_64_linux_pkgs.testers.runNixOSTest {
+              imports = [ ./tests/hello.nix ];
+              defaults.etc."dummy".text = secrets.dummy_secret;
+            };
             k3s-multi-node = x86_64_linux_pkgs.testers.runNixOSTest ./tests/k3s-multi-node.nix;
           };
 

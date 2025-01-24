@@ -7,7 +7,6 @@
       {
         imports = [ ../machines/hello.nix ];
         environment.systemPackages = [ pkgs.hello ];
-        environment.etc."dummy".text = secrets.dummy_secret;
       };
   };
   testScript = ''
