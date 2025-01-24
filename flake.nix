@@ -91,7 +91,7 @@
               ];
               # There has to be a better way to get this into the test machine.
               defaults.environment.etc = {
-                "hello" = inputs.secrets.dummy.hello;
+                "hello".text = inputs.secrets.dummy.hello;
                 "sops/age/keys.txt".text = inputs.secrets.dummy.age_key;
                 "sops/secrets.yaml".text = inputs.secrets.dummy.sops_yaml;
               };
