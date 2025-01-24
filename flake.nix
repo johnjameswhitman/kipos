@@ -57,10 +57,6 @@
 
           devShells = {
             default = pkgs.mkShell {
-              # DUMMY = builtins.readFile inputs.secrets + "/tests/dummy_keys.txt";
-              DUMMY = inputs.secrets.dummy.hello;
-              BUMMY = inputs.secrets.dummy.age_key;
-              MUMMY = inputs.secrets.dummy.sops_yaml;
               nativeBuildInputs = with pkgs; [
                 act
                 nixd
@@ -95,14 +91,15 @@
               ];
               # There has to be a better way to get this into the test machine.
               defaults.environment.etc = {
+                "hello" = inputs.secrets.dummy.hello;
                 "sops/age/keys.txt".text = inputs.secrets.dummy.age_key;
                 "sops/secrets.yaml".text = inputs.secrets.dummy.sops_yaml;
               };
-              defaults.sops = {
-                age.keyFile = "/etc/sops/age/keys.txt";
-                defaultSopsFile = "/etc/sops/secrets.yaml";
-                secrets.hello = { };
-              };
+              # defaults.sops = {
+              #   age.keyFile = "/etc/sops/age/keys.txt";
+              #   defaultSopsFile = "/etc/sops/secrets.yaml";
+              #   secrets.hello = { };
+              # };
             };
             k3s-multi-node = x86_64_linux_pkgs.testers.runNixOSTest ./tests/k3s-multi-node.nix;
           };
