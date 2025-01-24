@@ -90,13 +90,18 @@
           checks."x86_64-linux" = {
             hello = x86_64_linux_pkgs.testers.runNixOSTest {
               imports = [
-                ./tests/hello.nix
                 inputs.sops-nix.nixosModules.sops
+                ./tests/hello.nix
               ];
               # There has to be a better way to get this into the test machine.
               defaults.environment.etc = {
                 "sops/age/keys.txt".text = inputs.secrets.dummy.age_key;
                 "sops/secrets.yaml".text = inputs.secrets.dummy.sops_yaml;
+              };
+              defaults.sops = {
+                age.keyFile = "/etc/sops/age/keys.txt";
+                defaultSopsFile = "/etc/sops/secrets.yaml";
+                secrets.hello = { };
               };
             };
             k3s-multi-node = x86_64_linux_pkgs.testers.runNixOSTest ./tests/k3s-multi-node.nix;
