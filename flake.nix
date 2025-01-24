@@ -87,7 +87,7 @@
             hello = x86_64_linux_pkgs.testers.runNixOSTest {
               imports = [
                 ./tests/hello.nix
-                inputs.sops-nix
+                inputs.sops-nix.nixosModules.sops
               ];
               # There has to be a better way to get this into the test machine.
               defaults.environment.etc = {
