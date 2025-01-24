@@ -7,7 +7,7 @@
       {
         imports = [
           ../machines/hello.nix
-          inputs.sops.nixosModules.sops
+          inputs.sops-nix.nixosModules.sops
         ];
 
         environment.systemPackages = [ pkgs.hello ];
