@@ -6,9 +6,6 @@
 
     flake-parts.url = "github:hercules-ci/flake-parts";
 
-    # sops-nix.url = "github:Mic92/sops-nix";
-    # sops-nix.inputs.nixpkgs.follows = "nixpkgs";
-
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -16,6 +13,14 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     treefmt-nix.url = "github:numtide/treefmt-nix";
+    treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+    # sops-nix.url = "github:Mic92/sops-nix";
+    # sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+    secrets.url = "git+ssh://git@github.com/johnjameswhitman/kipos-secrets.git?ref=main&shallow=1";
+    secrets.inputs.nixpkgs.follows = "nixpkgs";
+
   };
 
   outputs =
@@ -26,6 +31,7 @@
       self,
       # sops-nix,
       nix-darwin,
+      secrets,
       ...
     }:
     flake-parts.lib.mkFlake { inherit inputs; } {
