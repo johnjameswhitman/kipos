@@ -86,7 +86,7 @@
           checks."x86_64-linux" = {
             hello = x86_64_linux_pkgs.testers.runNixOSTest {
               imports = [
-                inputs.sops-nix.nixosModules.sops
+                # inputs.sops-nix.nixosModules.sops
                 ./tests/hello.nix
               ];
               # There has to be a better way to get this into the test machine.
