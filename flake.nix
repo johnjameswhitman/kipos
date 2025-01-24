@@ -15,8 +15,8 @@
     treefmt-nix.url = "github:numtide/treefmt-nix";
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
 
-    # sops-nix.url = "github:Mic92/sops-nix";
-    # sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
 
     secrets.url = "git+ssh://git@github.com/johnjameswhitman/kipos-secrets.git?ref=main&shallow=1";
     secrets.inputs.nixpkgs.follows = "nixpkgs";
@@ -29,7 +29,7 @@
       flake-parts,
       nixpkgs,
       self,
-      # sops-nix,
+      sops-nix,
       nix-darwin,
       secrets,
       ...
@@ -79,13 +79,21 @@
             system = "x86_64-linux";
             config.allowUnfree = true;
           };
+          # secrets_path = builtins.toString inputs.secrets;
         in
         {
 
           checks."x86_64-linux" = {
             hello = x86_64_linux_pkgs.testers.runNixOSTest {
-              imports = [ ./tests/hello.nix ];
-              defaults.environment.etc."dummy".text = secrets.dummy_secret;
+              imports = [
+                ./tests/hello.nix
+                inputs.sops-nix
+              ];
+              # There has to be a better way to get this into the test machine.
+              defaults.environment.etc = {
+                "sops/age/keys.txt".text = builtins.readFile inputs.secrets + "/tests/dummy_keys.txt";
+                "sops/secrets.yaml".text = builtins.readFile inputs.secrets + "/tests/secrets.yaml";
+              };
             };
             k3s-multi-node = x86_64_linux_pkgs.testers.runNixOSTest ./tests/k3s-multi-node.nix;
           };
