@@ -79,8 +79,8 @@
             system = "x86_64-linux";
             config.allowUnfree = true;
           };
-          # secrets_path = builtins.toString inputs.secrets;
         in
+        # secrets_path = builtins.toString inputs.secrets;
         {
 
           checks."x86_64-linux" = {
