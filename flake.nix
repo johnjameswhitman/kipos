@@ -6,9 +6,6 @@
 
     flake-parts.url = "github:hercules-ci/flake-parts";
 
-    # sops-nix.url = "github:Mic92/sops-nix";
-    # sops-nix.inputs.nixpkgs.follows = "nixpkgs";
-
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -16,6 +13,14 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     treefmt-nix.url = "github:numtide/treefmt-nix";
+    treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+    secrets.url = "git+ssh://git@github.com/johnjameswhitman/kipos-secrets.git?ref=main&shallow=1";
+    secrets.inputs.nixpkgs.follows = "nixpkgs";
+
   };
 
   outputs =
@@ -24,8 +29,9 @@
       flake-parts,
       nixpkgs,
       self,
-      # sops-nix,
+      sops-nix,
       nix-darwin,
+      secrets,
       ...
     }:
     flake-parts.lib.mkFlake { inherit inputs; } {
@@ -76,8 +82,11 @@
         in
         {
 
+          secrets_path = builtins.toString inputs.secrets;
           checks."x86_64-linux" = {
-            hello = x86_64_linux_pkgs.testers.runNixOSTest ./tests/hello.nix;
+            # https://discourse.nixos.org/t/infinite-recursion-when-modularizing-flake-runnixostest/58579/6
+            # Run with: nix run -L .\#checks.x86_64-linux.test.driverInteractive
+            hello = x86_64_linux_pkgs.testers.runNixOSTest (import ./tests/hello.nix { inherit inputs; });
             k3s-multi-node = x86_64_linux_pkgs.testers.runNixOSTest ./tests/k3s-multi-node.nix;
           };
 
