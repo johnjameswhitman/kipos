@@ -24,6 +24,7 @@
         sops = {
           age.keyFile = "/etc/sops/age/keys.txt";
           defaultSopsFile = "/etc/sops/secrets.yaml";
+          validateSopsFiles = false;
           # age.keyFile = "${secrets_path}/tests/dummy_keys.txt";
           # defaultSopsFile = inputs.secrets + "/tests/secrets.yaml";
           # age.keyFile = builtins.toString (pkgs.writeText "keys.txt" inputs.secrets.dummy.age_key);
