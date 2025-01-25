@@ -4,6 +4,9 @@
   nodes = {
     machine1 =
       { pkgs, ... }:
+      let
+        secrets_path = builtins.toString inputs.secrets;
+      in
       {
         imports = [
           ../machines/hello.nix
@@ -19,8 +22,10 @@
         };
 
         sops = {
-          age.keyFile = "/etc/sops/age/keys.txt";
-          defaultSopsFile = "/etc/sops/secrets.yaml";
+          # age.keyFile = "/etc/sops/age/keys.txt";
+          # defaultSopsFile = "/etc/sops/secrets.yaml";
+          age.keyFile = "${secrets_path}/tests/dummy_keys.txt";
+          defaultSopsFile = "${secrets_path}/tests/secrets.yaml";
           secrets.hello = { };
         };
       };
