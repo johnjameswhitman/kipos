@@ -22,10 +22,10 @@
         };
 
         sops = {
-          # age.keyFile = "/etc/sops/age/keys.txt";
-          # defaultSopsFile = "/etc/sops/secrets.yaml";
-          age.keyFile = "${secrets_path}/tests/dummy_keys.txt";
-          defaultSopsFile = inputs.secrets + "/tests/secrets.yaml";
+          age.keyFile = "/etc/sops/age/keys.txt";
+          defaultSopsFile = "/etc/sops/secrets.yaml";
+          # age.keyFile = "${secrets_path}/tests/dummy_keys.txt";
+          # defaultSopsFile = inputs.secrets + "/tests/secrets.yaml";
           # age.keyFile = builtins.toString (pkgs.writeText "keys.txt" inputs.secrets.dummy.age_key);
           # defaultSopsFile = pkgs.writeText "secrets.yaml" inputs.secrets.dummy.sops_yaml;
           secrets.hello = { };
