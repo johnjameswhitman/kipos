@@ -83,18 +83,22 @@
           makeTest = import (x86_64_linux_pkgs.path + "/nixos/tests/make-test-python.nix");
           eval-config = import (x86_64_linux_pkgs.path + "/nixos/lib/eval-config.nix");
           qemu-common = import (x86_64_linux_pkgs.path + "/nixos/lib/qemu-common.nix");
-          diskoLib = import (disko + "/lib") {inherit lib makeTest eval-config;};
+          diskoLib = import (disko + "/lib") { inherit lib makeTest eval-config; };
         in
         {
 
           secrets_path = builtins.toString inputs.secrets;
-          checks."x86_64-linux" = let pkgs = x86_64_linux_pkgs; in {
-            # https://discourse.nixos.org/t/infinite-recursion-when-modularizing-flake-runnixostest/58579/6
-            # Run with: nix run -L .\#checks.x86_64-linux.test.driverInteractive
-            hello = x86_64_linux_pkgs.testers.runNixOSTest (import ./tests/hello.nix { inherit inputs; });
-            k3s-multi-node = x86_64_linux_pkgs.testers.runNixOSTest ./tests/k3s-multi-node.nix;
-            diskoDemo = diskoLib.testLib.makeDiskoTest ((import ./tests/silver.nix) // {inherit pkgs;});
-          };
+          checks."x86_64-linux" =
+            let
+              pkgs = x86_64_linux_pkgs;
+            in
+            {
+              # https://discourse.nixos.org/t/infinite-recursion-when-modularizing-flake-runnixostest/58579/6
+              # Run with: nix run -L .\#checks.x86_64-linux.test.driverInteractive
+              hello = x86_64_linux_pkgs.testers.runNixOSTest (import ./tests/hello.nix { inherit inputs; });
+              k3s-multi-node = x86_64_linux_pkgs.testers.runNixOSTest ./tests/k3s-multi-node.nix;
+              diskoDemo = diskoLib.testLib.makeDiskoTest ((import ./tests/silver.nix) // { inherit pkgs; });
+            };
 
           darwinConfigurations.mbp24 = inputs.nix-darwin.lib.darwinSystem {
             modules = [ ./machines/darwin.nix ];
