@@ -98,6 +98,7 @@
               hello = x86_64_linux_pkgs.testers.runNixOSTest (import ./tests/hello.nix { inherit inputs; });
               k3s-multi-node = x86_64_linux_pkgs.testers.runNixOSTest ./tests/k3s-multi-node.nix;
               diskoDemo = diskoLib.testLib.makeDiskoTest ((import ./tests/silver.nix) // { inherit pkgs; });
+              router = pkgs.testers.runNixOSTest ./tests/router.nix;
             };
 
           darwinConfigurations.mbp24 = inputs.nix-darwin.lib.darwinSystem {
