@@ -15,6 +15,7 @@ Collection of system configs for my machines.
     ```
 - [x] Build `test` VM locally
 - [x] Build `test` VM in GHA
+- [x] Set up renovate on repo
 - [x] Wire secrets into the repo (ref [blog post][secrets_blog_post])
     - [x] Set up `kipos-secrets` non-public repo to hold SOPS yaml (ref [sops-nix][sops_nix]
         for basic getting-started info)
@@ -25,8 +26,10 @@ Collection of system configs for my machines.
         ssh-agent
     - [x] Reference `kipos-secrets` as an input to flake
     - [x] Wire dummy secrets into `hello.nix` test
+- [x] Add container to `hello.nix`
+- [x] See if disko works with tests
+- [ ] Base install on nas
 - [ ] Auto-update flake via GHA
-- [ ] See if disko works with tests
 - [ ] Clean up `hello.nix`
 
 [nix_vm_gist]: https://gist.github.com/FlakM/0535b8aa7efec56906c5ab5e32580adf
