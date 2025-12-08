@@ -3,12 +3,13 @@
   lib,
   pkgs,
   ...
-}: {
-  users.groups.admin = {};
+}:
+{
+  users.groups.admin = { };
   users.users = {
     admin = {
       isNormalUser = true;
-      extraGroups = ["wheel"];
+      extraGroups = [ "wheel" ];
       password = "admin";
       group = "admin";
     };
@@ -28,10 +29,8 @@
     settings.PasswordAuthentication = true;
   };
 
-  networking.firewall.allowedTCPPorts = [22];
-  environment.systemPackages = with pkgs; [
-    htop
-  ];
+  networking.firewall.allowedTCPPorts = [ 22 ];
+  environment.systemPackages = with pkgs; [ htop ];
 
   system.stateVersion = "24.05";
 }

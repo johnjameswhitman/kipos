@@ -3,12 +3,24 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    alejandra.url = "github:kamadorueda/alejandra/d7552fef2ccf1bbf0d36b27f6fddb19073f205b7";
-    alejandra.inputs.nixpkgs.follows = "nixpkgs";
-    sops-nix.url = "github:Mic92/sops-nix";
-    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+    flake-parts.url = "github:hercules-ci/flake-parts";
+
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
+
+    nix-darwin.url = "github:LnL7/nix-darwin";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+
+    treefmt-nix.url = "github:numtide/treefmt-nix";
+    treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+    secrets.url = "git+ssh://git@github.com/johnjameswhitman/kipos-secrets.git?ref=main&shallow=1";
+    secrets.inputs.nixpkgs.follows = "nixpkgs";
+
   };
 
   outputs = inputs @ {
@@ -47,5 +59,5 @@
       silverAlt = diskoLib.testLib.makeDiskoTest ((import ./tests/silver.nix) // {inherit pkgs;});
       k3s-multi-node = pkgs.testers.runNixOSTest ./tests/k3s-multi-node.nix;
     };
-  };
+
 }
