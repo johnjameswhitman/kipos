@@ -155,10 +155,10 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1737758107,
-        "narHash": "sha256-6ZSJV+x/aJgxF5Yo69+dGpUFQqVuUPFPDR1NxUWHzFo=",
+        "lastModified": 1766331897,
+        "narHash": "sha256-fHjEYaogEdbozZHqIN/bzYwvf5uSTxcZXX/rhhASo7c=",
         "ref": "main",
-        "rev": "b890f14a7def7bc2c0302ac0359fb15a67226fb9",
+        "rev": "6195180d11defba6c07d06e7c8e5ccef328558da",
         "shallow": true,
         "type": "git",
         "url": "ssh://git@github.com/johnjameswhitman/kipos-secrets.git"
