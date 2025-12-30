@@ -62,6 +62,7 @@
     interfaces.enp1s0.allowedTCPPorts = [ 22 ];
     interfaces.br0.allowedTCPPorts = [
       22
+      53
       80
       443
     ];
@@ -77,15 +78,15 @@
 
   services.dnsmasq = {
     enable = true;
-    servers = [
-      "8.8.8.8"
-      "8.8.4.4"
-    ];
     settings = {
-      domain = "local";
-      interface = [ "br0" ];
       bind-interfaces = true;
       dhcp-range = [ "interface:br0,192.168.2.32,192.168.2.254,24h" ];
+      domain = "local";
+      interface = [ "br0" ];
+      server = [
+        "8.8.8.8"
+        "8.8.4.4"
+      ];
     };
   };
 

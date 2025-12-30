@@ -63,6 +63,7 @@
             default = pkgs.mkShell {
               nativeBuildInputs = with pkgs; [
                 act
+                pkgs.deploy-rs # Name conflicts with flake
                 nixd
                 pre-commit
               ];
@@ -87,12 +88,15 @@
         {
 
           secrets_path = builtins.toString inputs.secrets;
-          checks."x86_64-linux" = {
-            # https://discourse.nixos.org/t/infinite-recursion-when-modularizing-flake-runnixostest/58579/6
-            # Run with: nix run -L .\#checks.x86_64-linux.test.driverInteractive
-            hello = x86_64_linux_pkgs.testers.runNixOSTest (import ./tests/hello.nix { inherit inputs; });
-            k3s-multi-node = x86_64_linux_pkgs.testers.runNixOSTest ./tests/k3s-multi-node.nix;
-          };
+          # checks."x86_64-linux" = {
+          #   # https://discourse.nixos.org/t/infinite-recursion-when-modularizing-flake-runnixostest/58579/6
+          #   # Run with: nix run -L .\#checks.x86_64-linux.test.driverInteractive
+          #   hello = x86_64_linux_pkgs.testers.runNixOSTest (import ./tests/hello.nix { inherit inputs; });
+          #   k3s-multi-node = x86_64_linux_pkgs.testers.runNixOSTest ./tests/k3s-multi-node.nix;
+          # };
+          checks = builtins.mapAttrs (
+            system: deployLib: deployLib.deployChecks self.deploy
+          ) inputs.deploy-rs.lib;
 
           darwinConfigurations.mbp24 = inputs.nix-darwin.lib.darwinSystem {
             modules = [ ./machines/darwin.nix ];
@@ -121,12 +125,13 @@
             ];
           };
 
-          deploy.nodes.some-random-system = {
+          deploy.nodes.blue = {
             hostname = "192.168.1.228";
             profiles.system = {
+              sshUser = "deployer";
+              interactiveSudo = false;
               user = "root";
-              interactiveSudo = true;
-              path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.blue;
+              path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.blue;
             };
           };
 
