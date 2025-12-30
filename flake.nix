@@ -6,6 +6,9 @@
 
     flake-parts.url = "github:hercules-ci/flake-parts";
 
+    deploy-rs.url = "github:serokell/deploy-rs";
+    deploy-rs.inputs.nixpkgs.follows = "nixpkgs";
+
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -25,6 +28,7 @@
 
   outputs =
     inputs@{
+      deploy-rs,
       disko,
       flake-parts,
       nixpkgs,
@@ -115,6 +119,15 @@
             modules = [
               ./machines/blue/configuration.nix
             ];
+          };
+
+          deploy.nodes.some-random-system = {
+            hostname = "192.168.1.228";
+            profiles.system = {
+              user = "root";
+              interactiveSudo = true;
+              path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.blue;
+            };
           };
 
         };
