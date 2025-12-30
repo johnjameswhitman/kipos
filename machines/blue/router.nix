@@ -28,10 +28,6 @@
   # networking.interfaces.wlp5s0.macAddress = "06:f0:21:88:49:a0";
   networking.wlanInterfaces = {
     wlp5s0 = {device = "wlp5s0";};
-    # wap0v0 = {
-    #   device = "wlp5s0";
-    #   mac = "06:f0:21:88:49:a0";
-    # };
   };
 
   networking.bridges = {
