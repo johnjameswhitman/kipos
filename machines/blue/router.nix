@@ -111,8 +111,8 @@
       # DHCP
       dhcp-range = [ "interface:br0,192.168.2.32,192.168.2.254,24h" ];
       dhcp-option = [
-        "3,192.168.2.1"  # default gateway
-        "6,192.168.2.1"  # dns
+        "3,192.168.2.1" # default gateway
+        "6,192.168.2.1" # dns
       ];
       dhcp-authoritative = true;
       dhcp-rapid-commit = true;
