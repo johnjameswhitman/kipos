@@ -1,6 +1,6 @@
 { inputs, ... }:
 {
-  name = "hello";
+  name = "sanity";
   nodes = {
     machine1 =
       { pkgs, ... }:
@@ -9,7 +9,7 @@
       in
       {
         imports = [
-          ../machines/hello.nix
+          ./sanity_vm.nix
           inputs.sops-nix.nixosModules.sops
         ];
 

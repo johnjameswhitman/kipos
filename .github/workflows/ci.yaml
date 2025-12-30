@@ -21,9 +21,15 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.KIPOS_SECRETS_DEPLOY_KEY }}
       - uses: DeterminateSystems/nix-installer-action@main
-      - uses: DeterminateSystems/magic-nix-cache-action@main
+      # - uses: nix-community/cache-nix-action@v6
+      #   with:
+      #     # Key configuration is crucial for hit-rates
+      #     primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix') }}
+      #     restore-prefixes-first-match: nix-${{ runner.os }}-
       - uses: DeterminateSystems/flake-checker-action@main
       - uses: actions/setup-python@v3
       - uses: pre-commit/action@v3.0.1
-      - name: Run `nix flake check`
+      - name: Run `nix flake check` lint
         run: nix flake check --show-trace
+      - name: Run `nix build .#sanity-check` tests
+        run: nix build .#sanity-check --show-trace
