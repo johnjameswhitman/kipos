@@ -88,12 +88,13 @@
         {
 
           secrets_path = builtins.toString inputs.secrets;
-          # checks."x86_64-linux" = {
-          #   # https://discourse.nixos.org/t/infinite-recursion-when-modularizing-flake-runnixostest/58579/6
-          #   # Run with: nix run -L .\#checks.x86_64-linux.test.driverInteractive
-          #   hello = x86_64_linux_pkgs.testers.runNixOSTest (import ./tests/hello.nix { inherit inputs; });
-          #   k3s-multi-node = x86_64_linux_pkgs.testers.runNixOSTest ./tests/k3s-multi-node.nix;
-          # };
+
+          packages."x86_64-linux" = {
+            # https://discourse.nixos.org/t/infinite-recursion-when-modularizing-flake-runnixostest/58579/6
+            # Run with: nix run -L .\#checks.x86_64-linux.test.driverInteractive
+            sanity-check = x86_64_linux_pkgs.testers.runNixOSTest (import ./tests/sanity.nix { inherit inputs; });
+          };
+
           checks = builtins.mapAttrs (
             system: deployLib: deployLib.deployChecks self.deploy
           ) inputs.deploy-rs.lib;
@@ -111,11 +112,6 @@
               inherit inputs;
             };
           };
-
-          # nixosConfigurations.hello = inputs.nixpkgs.lib.nixosSystem {
-          #   system = "x86_64-linux";
-          #   modules = [ ./machines/hello.nix ];
-          # };
 
           nixosConfigurations.blue = nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
