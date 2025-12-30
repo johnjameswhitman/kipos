@@ -13,10 +13,10 @@
     isNormalUser = true;
     extraGroups = [
       "builders"
-      "wheel"
       "networking"
-      "sudo"
-    ]; # Enable ‘sudo’ for the user.
+      "ssh_users"
+      "wheel"
+    ];
 
     openssh.authorizedKeys.keyFiles = [
       ./id_ed25519_hp_nas.pub
@@ -25,8 +25,6 @@
       ./id_rsa_z420.pub
     ];
   };
-
-  services.openssh.settings.AllowUsers = [ "deployer" ];
 
   security.sudo.extraRules = [
     {
