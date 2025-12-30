@@ -12,8 +12,6 @@
   # Set your time zone.
   time.timeZone = "America/New_York";
 
-  networking.useDHCP = false; # Deprecated
-
   nix.extraOptions = ''
     keep-outputs = true
     keep-derivations = true

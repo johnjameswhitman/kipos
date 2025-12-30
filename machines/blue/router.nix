@@ -8,6 +8,7 @@
 {
 
   environment.systemPackages = with pkgs; [
+    dnsmasq
     hostapd
   ];
 
@@ -60,12 +61,19 @@
     allowPing = true;
     # TODO: disable SSH on WAN
     interfaces.enp1s0.allowedTCPPorts = [ 22 ];
-    interfaces.br0.allowedTCPPorts = [
-      22
-      53
-      80
-      443
-    ];
+    # Enable basic services on the LAN-side of router
+    interfaces.br0 = {
+      allowedTCPPorts = [
+        22
+        53
+        80
+        443
+      ];
+      allowedUDPPorts = [
+        53
+        67
+      ];
+    };
   };
 
   networking.nat = {
@@ -79,14 +87,35 @@
   services.dnsmasq = {
     enable = true;
     settings = {
-      bind-interfaces = true;
-      dhcp-range = [ "interface:br0,192.168.2.32,192.168.2.254,24h" ];
+      # General
+      domain-needed = true;
+      bogus-priv = true;
+      no-resolv = true;
+
+      # Local domain settings
       domain = "local";
+      local = "/local/";
+      expand-hosts = true;
+
+      # Listening settings
       interface = [ "br0" ];
+      bind-interfaces = true;
+
+      # DNS
       server = [
         "8.8.8.8"
         "8.8.4.4"
       ];
+      cache-size = 1024;
+
+      # DHCP
+      dhcp-range = [ "interface:br0,192.168.2.32,192.168.2.254,24h" ];
+      dhcp-option = [
+        "3,192.168.2.1"  # default gateway
+        "6,192.168.2.1"  # dns
+      ];
+      dhcp-authoritative = true;
+      dhcp-rapid-commit = true;
     };
   };
 
