@@ -13,6 +13,7 @@
     ./hardware-configuration.nix
     ./router.nix
     ../../profiles/common.nix
+    ../../profiles/users/deployer
     inputs.sops-nix.nixosModules.sops
   ];
 
@@ -38,7 +39,6 @@
 
   # Use the GRUB 2 boot loader.
   boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
   boot.loader.grub.device = "/dev/sda"; # or "nodev" for efi only
   networking.hostName = "blue"; # Define your hostname.
   networking.hostId = "ad79e2ce";
@@ -63,7 +63,7 @@
   nix.extraOptions = ''
     builders-use-substitutes = true
   '';
-  nix.trustedUsers = [
+  nix.settings.trusted-users = [
     "root"
     "@wheel"
   ];
@@ -71,7 +71,6 @@
   # TODO: Wire WiFi password into a config module
   sops = {
     defaultSopsFile = inputs.secrets + "/machines/blue/secrets.yaml";
-    age.keyFile = "/var/lib/sops/age/keys.txt";
     secrets.wifi_psk = { };
     secrets.wifi_ssid = { };
   };
