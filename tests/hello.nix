@@ -28,6 +28,8 @@
           # I had trouble finding an approach that exposed secrets.yaml from
           # the host store (CI kept complanining that the path did not exist).
           validateSopsFiles = false;
+          # While iterating you can do:
+          # nix build .#checks.x86_64-linux.hello --override-input secrets ../kipos-secrets
           secrets.hello = { };
         };
       };
