@@ -92,7 +92,9 @@
           packages."x86_64-linux" = {
             # https://discourse.nixos.org/t/infinite-recursion-when-modularizing-flake-runnixostest/58579/6
             # Run with: nix run -L .\#checks.x86_64-linux.test.driverInteractive
-            sanity-check = x86_64_linux_pkgs.testers.runNixOSTest (import ./tests/sanity.nix { inherit inputs; });
+            sanity-check = x86_64_linux_pkgs.testers.runNixOSTest (
+              import ./tests/sanity.nix { inherit inputs; }
+            );
           };
 
           checks = builtins.mapAttrs (
@@ -122,10 +124,9 @@
           };
 
           deploy.nodes.blue = {
-            hostname = "192.168.1.228";
+            hostname = "blue";
             profiles.system = {
               sshUser = "deployer";
-              interactiveSudo = false;
               user = "root";
               path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.blue;
             };

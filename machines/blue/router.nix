@@ -107,6 +107,9 @@
         "8.8.4.4"
       ];
       cache-size = 1024;
+      host-record = [
+        "blue.local,192.168.2.1"
+      ];
 
       # DHCP
       dhcp-range = [ "interface:br0,192.168.2.32,192.168.2.254,24h" ];
