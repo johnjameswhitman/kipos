@@ -190,3 +190,4 @@ result
 *.qcow2
 *.swp
 *.raw
+.nixos-test-history
