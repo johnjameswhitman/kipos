@@ -25,7 +25,6 @@
   boot.extraModprobeConfig = ''
     options cfg80211 ieee80211_regdom="US"
   '';
-  services.udev.packages = [pkgs.crda];
 
   boot.kernelParams = [
     "amd_iommu=off"
