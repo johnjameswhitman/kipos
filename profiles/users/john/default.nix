@@ -18,6 +18,7 @@
       "lxd"
       "networking"
       "podman"
+      "ssh_users"
       "wheel"
     ];
 

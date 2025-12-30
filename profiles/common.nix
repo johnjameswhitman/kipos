@@ -49,6 +49,7 @@
 
   users.groups = {
     builders = { };
+    ssh_users = { };
   };
 
   nix.settings.trusted-users = [
@@ -57,5 +58,8 @@
     "@wheel"
   ];
   nix.settings.experimental-features = "nix-command flakes";
+
+  # If SSH is enabled, limit it to members of ssh_users
+  services.openssh.settings.AllowGroups = [ "ssh_users" ];
 
 }
