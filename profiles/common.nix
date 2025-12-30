@@ -3,7 +3,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   imports = [
     ./users/john
   ];
@@ -49,7 +50,7 @@
   };
 
   users.groups = {
-    builders = {};
+    builders = { };
   };
 
   nix.settings.trusted-users = [

@@ -4,7 +4,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
 
   environment.systemPackages = with pkgs; [
     hostapd
@@ -14,24 +15,34 @@
   services.openssh.enable = true;
 
   networking.domain = "local";
-  networking.nameservers = [ "127.0.0.1" "8.8.8.8" "8.8.4.4"];
+  networking.nameservers = [
+    "127.0.0.1"
+    "8.8.8.8"
+    "8.8.4.4"
+  ];
 
   # Native interfaces
-  networking.interfaces.enp1s0.useDHCP = true;  # WAN, next to serial
-  networking.interfaces.enp2s0.useDHCP = false;  # LAN, bridged
-  networking.interfaces.enp3s0.useDHCP = false;  # LAN, bridged
-  networking.interfaces.enp4s0.useDHCP = false;  # LAN, bridged
+  networking.interfaces.enp1s0.useDHCP = true; # WAN, next to serial
+  networking.interfaces.enp2s0.useDHCP = false; # LAN, bridged
+  networking.interfaces.enp3s0.useDHCP = false; # LAN, bridged
+  networking.interfaces.enp4s0.useDHCP = false; # LAN, bridged
 
   # Wireless interface - original mac: 04:f0:21:88:49:a3
   # Change this so that hostapd can manage sub-interfaces:
   # https://wallabag.s2sq.com/view/465
   # networking.interfaces.wlp5s0.macAddress = "06:f0:21:88:49:a0";
   networking.wlanInterfaces = {
-    wlp5s0 = {device = "wlp5s0";};
+    wlp5s0 = {
+      device = "wlp5s0";
+    };
   };
 
   networking.bridges = {
-    br0.interfaces = ["enp2s0" "enp3s0" "enp4s0"];
+    br0.interfaces = [
+      "enp2s0"
+      "enp3s0"
+      "enp4s0"
+    ];
   };
 
   networking.interfaces = {
@@ -49,7 +60,11 @@
     allowPing = true;
     # TODO: disable SSH on WAN
     interfaces.enp1s0.allowedTCPPorts = [ 22 ];
-    interfaces.br0.allowedTCPPorts = [ 22 80 443 ];
+    interfaces.br0.allowedTCPPorts = [
+      22
+      80
+      443
+    ];
   };
 
   networking.nat = {
@@ -62,7 +77,10 @@
 
   services.dnsmasq = {
     enable = true;
-    servers = ["8.8.8.8" "8.8.4.4"];
+    servers = [
+      "8.8.8.8"
+      "8.8.4.4"
+    ];
     settings = {
       domain = "local";
       interface = [ "br0" ];
