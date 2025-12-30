@@ -29,6 +29,24 @@ Collection of system configs for my machines.
 - [ ] See if disko works with tests
 - [ ] Clean up `hello.nix`
 
+### Router
+
+- [x] Pull in old config
+- [x] Simplify config:
+  - [x] No VLANs to start
+  - [x] Single subnet
+  - [x] DNS / DHCP
+  - [x] NAT for basics
+- [x] Set up secrets
+- [x] Re-image machine, add deploy key to CI
+- [ ] SSH config for remote builds
+- [ ] Simple WiFi network
+- [ ] Wireguard
+- [ ] Observability
+  - [ ] Logging
+  - [ ] Metrics
+  - [ ] pmacct or ntopng
+
 [nix_vm_gist]: https://gist.github.com/FlakM/0535b8aa7efec56906c5ab5e32580adf
 [gh_deploy_keys]: https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#deploy-keys
 [sops_nix]: https://github.com/Mic92/sops-nix
