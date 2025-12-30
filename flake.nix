@@ -109,6 +109,14 @@
           #   modules = [ ./machines/hello.nix ];
           # };
 
+          nixosConfigurations.blue = nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            specialArgs = { inherit inputs; };
+            modules = [
+              ./machines/blue/configuration.nix
+            ];
+          };
+
         };
     };
 
