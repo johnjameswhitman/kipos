@@ -50,8 +50,13 @@
       system = "x86_64-linux";
       maxJobs = 1;
       speedFactor = 2;
-      supportedFeatures = ["nixos-test" "benchmark" "big-parallel" "kvm"];
-      mandatoryFeatures = [];
+      supportedFeatures = [
+        "nixos-test"
+        "benchmark"
+        "big-parallel"
+        "kvm"
+      ];
+      mandatoryFeatures = [ ];
     }
   ];
   nix.distributedBuilds = true;
@@ -67,8 +72,8 @@
   sops = {
     defaultSopsFile = inputs.secrets + "/machines/blue/secrets.yaml";
     age.keyFile = "/var/lib/sops/age/keys.txt";
-    secrets.wifi_psk = {};
-    secrets.wifi_ssid = {};
+    secrets.wifi_psk = { };
+    secrets.wifi_ssid = { };
   };
 
   # This value determines the NixOS release from which the default
