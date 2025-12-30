@@ -68,6 +68,7 @@
     defaultSopsFile = inputs.secrets + "/machines/blue/secrets.yaml";
     age.keyFile = "/var/lib/sops/age/keys.txt";
     secrets.wifi_psk = {};
+    secrets.wifi_ssid = {};
   };
 
   # This value determines the NixOS release from which the default
