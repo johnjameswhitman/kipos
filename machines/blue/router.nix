@@ -9,7 +9,6 @@
 
   environment.systemPackages = with pkgs; [
     dnsmasq
-    hostapd
   ];
 
   # Enable the OpenSSH daemon.
@@ -38,6 +37,17 @@
     };
   };
 
+  networking.wireless = {
+    enable = true;
+    # We restrict wireless to wlan0 to avoid conflicts if you have other radios
+    interfaces = [ "wlp5s0" ];
+    networks = {
+      "replaceme" = {
+        psk = "replaceme";
+      };
+    };
+  };
+
   networking.bridges = {
     br0.interfaces = [
       "enp2s0"
@@ -49,18 +59,26 @@
   networking.interfaces = {
     br0.ipv4.addresses = [
       {
-        address = "192.168.2.1";
+        address = "192.168.20.1";
         prefixLength = 24;
       }
     ];
+    wlp5s0 = {
+      useDHCP = false;
+      ipv4.addresses = [
+        {
+          address = "192.168.1.21";
+          prefixLength = 24;
+        }
+      ];
+    };
   };
 
   # Firewall
   networking.firewall = {
     enable = true;
     allowPing = true;
-    # TODO: disable SSH on WAN
-    interfaces.enp1s0.allowedTCPPorts = [ 22 ];
+
     # Enable basic services on the LAN-side of router
     interfaces.br0 = {
       allowedTCPPorts = [
@@ -72,15 +90,35 @@
       allowedUDPPorts = [
         53
         67
+        5353
       ];
     };
+
+    # Allow some traffic from downstairs
+    interfaces.wlp5s0 = {
+      allowedTCPPorts = [
+        22
+        53
+      ];
+      allowedUDPPorts = [
+        53
+        5353
+      ];
+    };
+
+    # Allow traffic between floors
+    extraCommands = ''
+      iptables -A FORWARD -i br0 -o wlp5s0 -j ACCEPT
+      iptables -A FORWARD -i wlp5s0 -o br0 -j ACCEPT
+    '';
+
   };
 
   networking.nat = {
     enable = true;
     externalInterface = "enp1s0";
     internalIPs = [
-      "192.168.2.0/24"
+      "192.168.20.0/24"
     ];
   };
 
@@ -108,18 +146,29 @@
       ];
       cache-size = 1024;
       host-record = [
-        "blue.local,192.168.2.1"
+        "blue.local,192.168.20.1"
       ];
 
       # DHCP
-      dhcp-range = [ "interface:br0,192.168.2.32,192.168.2.254,24h" ];
+      dhcp-range = [ "interface:br0,192.168.20.32,192.168.20.254,24h" ];
       dhcp-option = [
-        "3,192.168.2.1" # default gateway
-        "6,192.168.2.1" # dns
+        "3,192.168.20.1" # default gateway
+        "6,192.168.20.1" # dns
       ];
       dhcp-authoritative = true;
       dhcp-rapid-commit = true;
     };
+  };
+
+  # mDNS
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true; # Allow software to resolve .local domains
+    reflector = true; # For continuity with first floor
+    allowInterfaces = [
+      "br0"
+      "wlp5s0"
+    ];
   };
 
 }
