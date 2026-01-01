@@ -27,27 +27,6 @@
   networking.interfaces.enp3s0.useDHCP = false; # LAN, bridged
   networking.interfaces.enp4s0.useDHCP = false; # LAN, bridged
 
-  # Wireless interface - original mac: 04:f0:21:88:49:a3
-  # Change this so that hostapd can manage sub-interfaces:
-  # https://wallabag.s2sq.com/view/465
-  # networking.interfaces.wlp5s0.macAddress = "06:f0:21:88:49:a0";
-  networking.wlanInterfaces = {
-    wlp5s0 = {
-      device = "wlp5s0";
-    };
-  };
-
-  networking.wireless = {
-    enable = true;
-    # We restrict wireless to wlan0 to avoid conflicts if you have other radios
-    interfaces = [ "wlp5s0" ];
-    networks = {
-      "replaceme" = {
-        psk = "replaceme";
-      };
-    };
-  };
-
   networking.bridges = {
     br0.interfaces = [
       "enp2s0"
