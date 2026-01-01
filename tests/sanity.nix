@@ -18,12 +18,11 @@
         environment.etc = {
           "hello".text = inputs.secrets.dummy.hello;
           "sops/age/keys.txt".text = inputs.secrets.dummy.age_key;
-          "sops/secrets.yaml".text = inputs.secrets.dummy.sops_yaml;
         };
 
         sops = {
           age.keyFile = "/etc/sops/age/keys.txt";
-          defaultSopsFile = "/etc/sops/secrets.yaml";
+          defaultSopsFile = inputs.secrets + "/tests/secrets.yaml";
           # sops-nix complained about the secrets not living in the store, but
           # I had trouble finding an approach that exposed secrets.yaml from
           # the host store (CI kept complanining that the path did not exist).
