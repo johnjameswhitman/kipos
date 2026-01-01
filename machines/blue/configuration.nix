@@ -68,11 +68,20 @@
     "@wheel"
   ];
 
-  # TODO: Wire WiFi password into a config module
   sops = {
     defaultSopsFile = inputs.secrets + "/machines/blue/secrets.yaml";
-    secrets.wifi_psk = { };
-    secrets.wifi_ssid = { };
+    secrets.wifi = { };
+  };
+
+  # systemd.services."wpa_supplicant-wlp5s0.service".Unit.After
+  networking.wireless = {
+    enable = true;
+    interfaces = [ "wlp5s0" ];
+    secretsFile = config.sops.secrets.wifi.path;
+    networks.downstairs = {
+      ssid = inputs.secrets.blue.wifi_downstairs_ssid;
+      pskRaw = "ext:downstairs_psk";
+    };
   };
 
   # This value determines the NixOS release from which the default
