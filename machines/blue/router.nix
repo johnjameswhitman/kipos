@@ -132,7 +132,9 @@
         "6,192.168.20.1" # dns
       ];
       dhcp-authoritative = true;
+      dhcp-ignore-clid = false;
       dhcp-rapid-commit = true;
+      dhcp-host = [ "84:2f:57:3e:15:55,mbp24.local,192.168.1.50" ];
     };
   };
 
