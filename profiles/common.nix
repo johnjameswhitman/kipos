@@ -60,6 +60,13 @@
   nix.settings.experimental-features = "nix-command flakes";
 
   # If SSH is enabled, limit it to members of ssh_users
-  services.openssh.settings.AllowGroups = [ "ssh_users" ];
+  services.openssh = {
+    enable = true;
+    openFirewall = false;
+    settings = {
+      PermitRootLogin = "no";
+      AllowGroups = [ "ssh_users" ];
+    };
+  };
 
 }

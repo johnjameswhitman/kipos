@@ -11,9 +11,6 @@
     dnsmasq
   ];
 
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
-
   networking.domain = "local";
   networking.nameservers = [
     "127.0.0.1"
