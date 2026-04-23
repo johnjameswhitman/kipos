@@ -32,6 +32,7 @@
     jq
     pciutils
     python3
+    tmux
     stow # bootstraps homedir.
     vim
     vimPlugins.python-mode
