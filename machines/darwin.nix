@@ -47,7 +47,9 @@ in
     serviceConfig.ProcessType = "Background";
   };
   launchd.daemons.alloy = {
-    command = "${pkgs.grafana-alloy}/bin/alloy run /etc/alloy/config.alloy";
+    # --storage.path is required: launchd cwd is / (read-only SES root),
+    # alloy default data-alloy/ dir would fail with EROFS.
+    command = "${pkgs.grafana-alloy}/bin/alloy run --server.http.listen-addr=127.0.0.1:12345 --storage.path=/var/lib/alloy /etc/alloy/config.alloy";
     serviceConfig.RunAtLoad = true;
     serviceConfig.KeepAlive = true;
     serviceConfig.ProcessType = "Background";
