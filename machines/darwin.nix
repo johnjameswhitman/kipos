@@ -1,4 +1,7 @@
 { config, pkgs, ... }:
+let
+  lokiUrl = "http://192.168.20.26:3100/loki/api/v1/push";
+in
 {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
@@ -6,6 +9,39 @@
     git
     vim
   ];
+
+  # --- monitoring (kipos-monitoring stack on silver) ---
+  environment.etc."alloy/config.alloy".text = ''
+    loki.source.file "mini24" {
+      targets = ["/var/log/install.log", "/var/log/system.log"]
+    }
+
+    loki.relabel "mini24" {
+      forward_to = [loki.write.default.endpoint]
+      rule {
+        source_labels = ["__path__"]
+        target_label = "host"
+        replacement = "mini24"
+      }
+    }
+
+    loki.write "default" {
+      endpoint { url = "${lokiUrl}" }
+    }
+  '';
+
+  launchd.daemons.node-exporter = {
+    command = "${pkgs.prometheus-node-exporter}/bin/node_exporter";
+    serviceConfig.RunAtLoad = true;
+    serviceConfig.KeepAlive = true;
+    serviceConfig.ProcessType = "Background";
+  };
+  launchd.daemons.alloy = {
+    command = "${pkgs.grafana-alloy}/bin/alloy run /etc/alloy/config.alloy";
+    serviceConfig.RunAtLoad = true;
+    serviceConfig.KeepAlive = true;
+    serviceConfig.ProcessType = "Background";
+  };
 
   # Homebrew packages (need to manually install homebrew first)
   homebrew.enable = true;
