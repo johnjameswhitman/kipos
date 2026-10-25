@@ -27,7 +27,7 @@ in
     }
 
     loki.relabel "mini24" {
-      forward_to = [loki.write.default.endpoint]
+      forward_to = [loki.write.default.receiver]
       rule {
         source_labels = ["__path__"]
         target_label = "host"
