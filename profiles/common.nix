@@ -58,7 +58,7 @@
     "@builders"
     "@wheel"
   ];
-  nix.settings.experimental-features = "nix-command flakes";
+  nix.settings.experimental-features = [ "nix-command flakes" ];
 
   # If SSH is enabled, limit it to members of ssh_users
   services.openssh = {
