@@ -15,7 +15,10 @@ in
     local.file_match "mini24" {
       // sync the file tailers with new files appearing in the log dir
       sync_period = "5m"
-      glob = ["/var/log/install.log", "/var/log/system.log"]
+      path_targets = [
+        {"__path__" = "/var/log/install.log"},
+        {"__path__" = "/var/log/system.log"},
+      ]
     }
 
     loki.source.file "mini24" {
