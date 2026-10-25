@@ -55,9 +55,8 @@ in
     "steam"
   ];
 
-  services.nix-daemon.enable = true;
-
-  security.pam.enableSudoTouchIdAuth = true;
+  # nix-darwin >= 5.7: activation runs as root; homebrew needs the primary user.
+  system.primaryUser = "johnwhitman";
 
   # Necessary for using flakes on this system.
   nix.settings.experimental-features = "nix-command flakes";
