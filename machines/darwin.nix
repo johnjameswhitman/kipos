@@ -12,8 +12,15 @@ in
 
   # --- monitoring (kipos-monitoring stack on silver) ---
   environment.etc."alloy/config.alloy".text = ''
+    local.file_match "mini24" {
+      // sync the file tailers with new files appearing in the log dir
+      sync_period = "5m"
+      glob = ["/var/log/install.log", "/var/log/system.log"]
+    }
+
     loki.source.file "mini24" {
-      targets = ["/var/log/install.log", "/var/log/system.log"]
+      targets = local.file_match.mini24.targets
+      forward_to = [loki.relabel.mini24.receiver]
     }
 
     loki.relabel "mini24" {
