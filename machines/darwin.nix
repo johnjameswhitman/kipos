@@ -11,6 +11,15 @@ in
   ];
 
   # --- monitoring (kipos-monitoring stack on silver) ---
+  # Re-allow node_exporter in the app firewall on each activation: nix store
+  # paths change per generation and socketfilterfw matches by exact path.
+  system.activationScripts.monitoring.text = ''
+    NE="${pkgs.prometheus-node-exporter}/bin/node_exporter"
+    /usr/libexec/ApplicationFirewall/socketfilterfw --add "$NE" >/dev/null 2>&1 || true
+    /usr/libexec/ApplicationFirewall/socketfilterfw --unblockapp "$NE" >/dev/null 2>&1 || true
+    /bin/mkdir -p /var/lib/alloy
+  '';
+  system.activationScripts.monitoring.order = 700;
   environment.etc."alloy/config.alloy".text = ''
     local.file_match "mini24" {
       // sync the file tailers with new files appearing in the log dir
