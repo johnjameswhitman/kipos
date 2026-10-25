@@ -17,6 +17,8 @@
     inputs.sops-nix.nixosModules.sops
   ];
 
+  nixpkgs.config.allowUnfree = true;
+
   # WiFi things
   # networking.wireless.athUserRegulatoryDomain = true;
   hardware.enableRedistributableFirmware = true;
@@ -70,7 +72,10 @@
 
   sops = {
     defaultSopsFile = inputs.secrets + "/machines/blue/secrets.yaml";
-    secrets.wifi = { };
+    secrets.wifi = {
+      owner = "wpa_supplicant";
+      group = "wpa_supplicant";
+    };
   };
 
   # systemd.services."wpa_supplicant-wlp5s0.service".Unit.After
@@ -81,6 +86,23 @@
     networks.downstairs = {
       ssid = inputs.secrets.blue.wifi_downstairs_ssid;
       pskRaw = "ext:downstairs_psk";
+    };
+  };
+
+  systemd.services.weekly-reboot = {
+    description = "Weekly reboot";
+    serviceConfig.Type = "oneshot";
+    script = ''
+      ${pkgs.systemd}/bin/systemctl reboot
+    '';
+  };
+
+  systemd.timers.weekly-reboot = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "Sun *-*-* 03:00:00";
+      Persistent = false;
+      Unit = "weekly-reboot.service";
     };
   };
 
