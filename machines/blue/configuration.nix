@@ -13,6 +13,7 @@
     ./hardware-configuration.nix
     ./router.nix
     ../../profiles/common.nix
+    ../../profiles/monitoring.nix
     ../../profiles/users/deployer
     inputs.sops-nix.nixosModules.sops
   ];
