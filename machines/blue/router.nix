@@ -62,6 +62,7 @@
         53
         80
         443
+        49222
       ];
       allowedUDPPorts = [
         53
@@ -96,6 +97,13 @@
     internalIPs = [
       "192.168.20.0/24"
     ];
+    # forwardPorts = [
+    #   {
+    #     sourcePort = 49222;              # The random high port exposed to the internet
+    #     proto = "tcp";                   # SSH strictly uses TCP
+    #     destination = "192.168.1.50:22"; # Target internal IP and standard SSH port
+    #   }
+    # ];
   };
 
   services.dnsmasq = {
@@ -123,6 +131,10 @@
       cache-size = 1024;
       host-record = [
         "blue.local,192.168.20.1"
+        "router.local,192.168.20.1"
+        "mini24.local,192.168.20.24"
+        "mbp24.local,192.168.20.25"
+        "silver.local,192.168.20.26"
       ];
 
       # DHCP
@@ -134,7 +146,11 @@
       dhcp-authoritative = true;
       dhcp-ignore-clid = false;
       dhcp-rapid-commit = true;
-      dhcp-host = [ "84:2f:57:3e:15:55,mbp24.local,192.168.1.50" ];
+      dhcp-host = [
+        "d0:11:e5:19:28:52,mini24.local,192.168.20.24"
+        "84:2f:57:3e:15:55,mbp24.local,192.168.20.25"
+        "58:47:ca:72:6f:5f,silver.local,192.168.20.26"
+      ];
     };
   };
 
@@ -142,6 +158,7 @@
   services.avahi = {
     enable = true;
     nssmdns4 = true; # Allow software to resolve .local domains
+    nssmdns6 = true; # Allow software to resolve .local domains
     reflector = true; # For continuity with first floor
     allowInterfaces = [
       "br0"
