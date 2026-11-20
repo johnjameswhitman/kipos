@@ -1,6 +1,12 @@
 { config, pkgs, ... }:
 let
-  lokiUrl = "http://192.168.20.26:3100/loki/api/v1/push";
+  # OpenObserve on silver (Loki-compatible push). The Loki container on :3100
+  # is retired. The password is not in this repo: install /etc/alloy/o2pass
+  # on mini24 and mbp24 (owner root, mode 600) before Alloy can authenticate.
+  # launchd runs the daemon as root, so it can read that file. A trailing
+  # newline is fine; the client trims surrounding whitespace. Activation does
+  # not create the file and does not fail when it is missing.
+  lokiUrl = "http://192.168.20.26:5080/api/default/loki/api/v1/push";
 in
 {
   # List packages installed in system profile. To search by name, run:
@@ -10,7 +16,7 @@ in
     vim
   ];
 
-  # --- monitoring (kipos-monitoring stack on silver) ---
+  # --- monitoring (node_exporter to silver; logs to OpenObserve) ---
   # Re-allow node_exporter in the app firewall on each activation: nix store
   # paths change per generation and socketfilterfw matches by exact path.
   system.activationScripts.monitoring.text = ''
@@ -18,6 +24,18 @@ in
     /usr/libexec/ApplicationFirewall/socketfilterfw --add "$NE" >/dev/null 2>&1 || true
     /usr/libexec/ApplicationFirewall/socketfilterfw --unblockapp "$NE" >/dev/null 2>&1 || true
     /bin/mkdir -p /var/lib/alloy
+    # Warn only. darwin-rebuild runs activation with `set -e`; a missing or
+    # loose password file must not abort the switch. /etc/alloy/o2pass is a
+    # normal file beside the nix-managed config.alloy symlink — do not replace
+    # that symlink.
+    if [ ! -f /etc/alloy/o2pass ]; then
+      printf '%s\n' "monitoring: /etc/alloy/o2pass is absent; activation continues, but Alloy cannot authenticate to OpenObserve until that root-owned mode-600 file is installed." >&2
+    else
+      mode=$(/usr/bin/stat -f '%Lp' /etc/alloy/o2pass 2>/dev/null || printf '%s' unknown)
+      if [ "$mode" != "600" ]; then
+        printf '%s\n' "monitoring: /etc/alloy/o2pass mode is $mode; expected 600 so only root can read the OpenObserve password. Activation continues." >&2
+      fi
+    fi
   '';
   system.activationScripts.monitoring.order = 700;
   environment.etc."alloy/config.alloy".text = ''
@@ -40,12 +58,20 @@ in
       rule {
         source_labels = ["__path__"]
         target_label = "host"
+        // mini24 and mbp24 share this module, so mbp24 logs are labeled
+        // host=mini24 as well.
         replacement = "mini24"
       }
     }
 
     loki.write "default" {
-      endpoint { url = "${lokiUrl}" }
+      endpoint {
+        url = "${lokiUrl}"
+        basic_auth {
+          username = "root@openobserve.local"
+          password_file = "/etc/alloy/o2pass"
+        }
+      }
     }
   '';
 
